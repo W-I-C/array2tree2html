@@ -24,18 +24,21 @@
 			width: 100%;
 			text-align: center;
 			padding-bottom: 3em;
-			background-image: url(../img/both.svg);
+			background-image: url(../img/both.svg);/*显示两边子树的连线*/
 			background-repeat: no-repeat;
 			background-size: 100%;
 			background-position: 0 0;
 		}
+		/*没有子树的元素不显示连线和多余空间*/
 		div.no-sub-tree > span {
 			background-image: none;
+			padding-bottom: 0;
 		}
+		/*只有左子树的元素，只显示左边的连线*/
 		div.only-has-left > span {
 			background-image: url(../img/left.svg);
 		}
-		/*不存在..*/
+		/*不存在只有右子树的连线*/
 		/*div.only-has-right > span {
 			background-image: url(../img/right.svg);
 		}*/
@@ -64,16 +67,16 @@
 	$(function(){
 		$("#arraySubmit").bind("click",function(){
 			let str = $("#array").val();
-			str = str.replace(/^\s+|\s+$/g, '');
+			str = str.replace(/^\s+|\s+$/g, '');//去除首尾空格
 			if (!str) {
 				$("#tip")[0].innerHTML = "<h5>请输入.</h5>";
 				$("#tip").stop(true,true).fadeIn().fadeOut(3000);
 			}
-			array = str.split(/\s+/g);
+			array = str.split(/\s+/g);//按一个或多个空格分割成数组
 			console.log(array);
-			let tree = createTree(array);
+			let tree = createTree(array);//生成二叉树
 			console.log(tree);
-			$("#BST")[0].innerHTML = tree2html(tree);
+			$("#BST")[0].innerHTML = tree2html(tree);//插入由树转换的div
 		});
 		$("#array").bind("keypress",function(){
 			if (event.keyCode == "13") {
@@ -91,7 +94,7 @@
 		this.leftData = leftData;
 		this.rightData = rightData;
 	}
-	// 每次取中点作为根节点,向左和向右递归
+	// 取中点作为节点,向左和向右递归
 	function createTree(array) {
 		if (array.length <= 0) {
 			return null;
@@ -105,7 +108,7 @@
 			return node;
 		}
 	}
-	// 展示二叉树
+	// 用递归方法将二叉树转换成嵌套的div
 	function tree2html(node) {
 		if (node) {
 			let onlyLeft  = (node.leftData && !node.rightData);
