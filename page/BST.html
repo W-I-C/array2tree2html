@@ -8,7 +8,7 @@
 		#arrayInput,#BST{
 			margin-top: 5em;
 		}
-		#tip{
+		#tip, input{
 			margin-top: 0.3em;
 		}
 		div.tree {
@@ -50,7 +50,7 @@
 			<div class="col-sm-6 col-sm-offset-2">
 				<input type="text" class="form-control" id="array" placeholder="请按升序输入数组（由空格隔开）">
 			</div>
-			<div class="col-sm-2">
+			<div class="col-md-2">
 				<input type="button" id="arraySubmit" class="btn btn-primary" value="提交">
 				<input type="button" id="arrayReset" class="btn btn-default" value="重置">
 			</div>
@@ -68,23 +68,25 @@
 		$("#arraySubmit").bind("click",function(){
 			let str = $("#array").val().replace(/^\s+|\s+$/g, '');
 			if (!str) {
-				$("#tip")[0].innerHTML = "<h5>请输入.</h5>";
-				$("#tip").stop(true,true).fadeIn().fadeOut(3000);
+				$("#tip").html("<h5>请输入.</h5>").stop(true,true).fadeIn().fadeOut(3000);
 			}
 			array = str.split(/\s+/g);//按空格分割成数组
 			console.log(array);
 			let tree = createTree(array);//生成二叉树
 			console.log(tree);
-			$("#BST")[0].innerHTML = tree2html(tree);//插入由树转换的div
+			$("#BST").html(tree2html(tree));//插入由树转换的div
+			$("#array").focus();
 		});
-		$("#array").bind("keypress",function(){
-			if (event.keyCode == "13") {
+		$("#array").bind("keypress",function(e){
+			if (e.which == 13) {
 				$("#arraySubmit").click();
+				return false;
 			}
 		});
 		$("#arrayReset").bind("click",function(){
 			$("#array").val("");
-			$("#BST")[0].innerHTML = "";
+			$("#BST").html("");
+			$("#array").focus();
 		});
 	});
 	// 构造一个节点
