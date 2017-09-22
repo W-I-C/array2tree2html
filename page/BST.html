@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style>
+		#arrayInput,#BST{
+			margin-top: 5em;
+		}
+		#tip{
+			margin-top: 0.3em;
+		}
+		div.tree {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-start;
+		}
+		.tree > .tree {
+			width: 50%;
+		}
+		div.tree > span {
+			height: 5em;
+			width: 100%;
+			text-align: center;
+			padding-bottom: 3em;
+			background-image: url(../img/both.svg);
+			background-repeat: no-repeat;
+			background-size: 100%;
+			background-position: 0 0;
+		}
+		div.no-sub-tree > span {
+			background-image: none;
+		}
+		div.only-has-left > span {
+			background-image: url(../img/left.svg);
+		}
+		/*不存在..*/
+		/*div.only-has-right > span {
+			background-image: url(../img/right.svg);
+		}*/
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row" id="arrayInput">
+			<div class="col-sm-6 col-sm-offset-2">
+				<input type="text" class="form-control" id="array" placeholder="请按升序输入数组（由空格隔开）">
+			</div>
+			<div class="col-sm-2">
+				<input type="button" id="arraySubmit" class="btn btn-primary" value="提交">
+				<input type="button" id="arrayReset" class="btn btn-default" value="重置">
+			</div>
+			<div id="tip" class="col-sm-6 col-sm-offset-2"></div>
+		</div>
+		<div id="BST">
+			
+		</div>
+	</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready($("#array").focus());
+	$(function(){
+		$("#arraySubmit").bind("click",function(){
+			let str = $("#array").val();
+			str = str.replace(/^\s+|\s+$/g, '');
+			if (!str) {
+				$("#tip")[0].innerHTML = "<h5>请输入.</h5>";
+				$("#tip").stop(true,true).fadeIn().fadeOut(3000);
+			}
+			array = str.split(/\s+/g);
+			console.log(array);
+			let tree = createTree(array);
+			console.log(tree);
+			$("#BST")[0].innerHTML = tree2html(tree);
+		});
+		$("#array").bind("keypress",function(){
+			if (event.keyCode == "13") {
+				$("#arraySubmit").click();
+			}
+		});
+		$("#arrayReset").bind("click",function(){
+			$("#array").val("");
+			$("#BST")[0].innerHTML = "";
+		});
+	});
+	// 构造一个节点
+	function Node(nodeData, leftData, rightData) {
+		this.nodeData = nodeData;
+		this.leftData = leftData;
+		this.rightData = rightData;
+	}
+	// 每次取中点作为根节点,向左和向右递归
+	function createTree(array) {
+		if (array.length <= 0) {
+			return null;
+		} else {
+			let mid = parseInt(array.length / 2);
+			let node = new Node(array[mid], null, null);
+			let leftArray = array.slice(0 , mid);
+			let rightArray = array.slice(mid + 1 , array.length );
+			node.leftData = createTree(leftArray);
+			node.rightData = createTree(rightArray);
+			return node;
+		}
+	}
+	// 展示二叉树
+	function tree2html(node) {
+		if (node) {
+			let onlyLeft  = (node.leftData && !node.rightData);
+			// let onlyRight = (!node.leftData && node.rightData);
+			let both = (node.leftData && node.rightData);
+			let noSubTree = (!node.leftData && !node.rightData);
+			return `<div class="tree ${both?"both":""} ${noSubTree?"no-sub-tree":""} ${onlyLeft?"only-has-left":""}">
+			<span>${node.nodeData}</span>
+			${tree2html(node.leftData)}
+			${tree2html(node.rightData)}
+		</div>`;
+	} else {
+		return "";
+	}
+}
+</script>
+</html>
