@@ -66,13 +66,12 @@
 	$(document).ready($("#array").focus());
 	$(function(){
 		$("#arraySubmit").bind("click",function(){
-			let str = $("#array").val();
-			str = str.replace(/^\s+|\s+$/g, '');//去除首尾空格
+			let str = $("#array").val().replace(/^\s+|\s+$/g, '');
 			if (!str) {
 				$("#tip")[0].innerHTML = "<h5>请输入.</h5>";
 				$("#tip").stop(true,true).fadeIn().fadeOut(3000);
 			}
-			array = str.split(/\s+/g);//按一个或多个空格分割成数组
+			array = str.split(/\s+/g);//按空格分割成数组
 			console.log(array);
 			let tree = createTree(array);//生成二叉树
 			console.log(tree);
